@@ -10,7 +10,6 @@ socket.on('assignID', (ID) => {
 });
 socket.on('disconnected', (ID) => {
   console.log("ID disconnected: " + ID);
-  disconnectedID.push(ID);
 });
 socket.on('newConnection', (ID) => {
   console.log("newConnection: " + ID);
@@ -19,7 +18,7 @@ socket.emit("notifi", (noti) => {
   console.log(noti);
 })
 var thisID;  //0,1,2,3,4
-var device = [0, 1, 0, 1, 0]
+var device = [1, 0, 0, 1, 0]
 setTimeout(() => { //init disconnect device
   if (device[thisID] == 0) {
     socket.emit("disconnected");

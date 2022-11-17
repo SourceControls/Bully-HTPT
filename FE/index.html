@@ -4,9 +4,52 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
+
   <body>
+    <div class="container">
+      <div class="item">
+        <div id="1" class="circle">Node 1</div>
+        <h4>Ip: 192.164.111.111</h4>
+      </div>
+      <div class="item">
+        <div id="2" class="circle">Node 2</div>
+        <h4>Ip: 192.164.111.111</h4>
+      </div>
+      <div class="item">
+        <div id="3" class="circle">Node 3</div>
+        <h4>Ip: 192.164.111.111</h4>
+      </div>
+      <div class="item">
+        <div id="4" class="circle">Node 4</div>
+        <h4>Ip: 192.164.111.111</h4>
+      </div>
+      <div class="item">
+        <div id="5" class="circle">Node 5</div>
+        <h4>Ip: 192.164.111.111</h4>
+      </div>
+    </div>
     <script type="module" src="script.js"></script>
+    <script>
+      var circles = document.getElementsByClassName('circle');
+      function colorChange(id, status) {
+        var ID = document.getElementById(id);
+        for (var i = 0; i < circles.length; i++) {
+          circles[i].style.backgroundColor = '#fff';
+        }
+
+        if (status == 1)
+          //acive
+          ID.style.backgroundColor = '#228B22';
+        else if (status < 0) {
+          //disabled
+          ID.style.backgroundColor = '#B21807';
+          ID.classList.add('disabled');
+        }
+      }
+      colorChange(1, -1);
+    </script>
   </body>
 </html>
