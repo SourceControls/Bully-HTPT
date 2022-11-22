@@ -18,13 +18,15 @@ socket.emit("notifi", (noti) => {
   console.log(noti);
 })
 var thisID;  //0,1,2,3,4
-var device = [1, 0, 0, 1, 0]
+var device = [1, 1, 1, 1, 1]
 setTimeout(() => { //init disconnect device
   if (device[thisID] == 0) {
     socket.emit("disconnected");
   }
-}, "3000")
+}, "5000")
 setTimeout(() => {
   if (thisID == 0)  //start vote
+  {
     socket.emit("startVote");
-}, "9000")
+  }
+}, "15000")

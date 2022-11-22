@@ -1,9 +1,13 @@
 const express = require('express');
 const app = express();
+
+
+//config socket
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const io = require('socket.io')(server, {
+  cors: { origin: '*' }
+});
 
 
 var device = [0, 0, 0, 0, 0];
@@ -17,7 +21,12 @@ io.on('connection', (socket) => {
   device[ID] = 1;
   socket.ID = ID;
   console.log('a user connected: ' + socket.ID);
-  socket.on('disconnected', () => {
+  // socket.on('disconnected', () => {
+  //   console.log('a user disconnect: ' + socket.ID);
+  //   device[socket.ID] = 0;
+  //   // io.emit('disconnected', socket.ID); //thong bao cho tat ca cac may la co device  disconnect.
+  // });
+  socket.on('disconnect', () => {
     console.log('a user disconnect: ' + socket.ID);
     device[socket.ID] = 0;
     // io.emit('disconnected', socket.ID); //thong bao cho tat ca cac may la co device  disconnect.
@@ -61,9 +70,22 @@ io.on('connection', (socket) => {
     }
   });
 });
+const path = require('path');
 
+const publicPath = path.join(__dirname, "./public/");
 
+app.use(express.static(publicPath));
+const cors = require("cors");
+app.use(cors({
+  origin: '*',
+}));
 
+app.get('/', function (req, res) {
+
+  res.sendFile('./index.html');
+})
+
+// listend on port 3000
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
