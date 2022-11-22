@@ -18,7 +18,7 @@ socket.emit("notifi", (noti) => {
   console.log(noti);
 })
 var thisID;  //0,1,2,3,4
-var device = [1, 1, 1, 1, 1]
+var device = [1, 1, 1, 1, 0]
 setTimeout(() => { //init disconnect device
   if (device[thisID] == 0) {
     socket.emit("disconnected");
