@@ -11,7 +11,7 @@ const io = require('socket.io')(server, {
 
 
 var device = [0, 0, 0, 0, 0];
-
+var log = [];
 io.on('connection', (socket) => {
   var ID = device.indexOf(0);
   if (ID == -1) {
@@ -42,27 +42,30 @@ io.on('connection', (socket) => {
 
       for (let i = k + 1; i < 5; i++) {
         if (device[i] != 0) {
-          console.log(`Máy ${k} gửi thông điệp Election(${k}) cho máy ${i}`)
-          io.emit('notifiCodinator', `Máy ${k} gửi thông điệp Election(${k}) cho máy ${i}`)
+          log.push(`Máy ${k} gửi thông điệp Election(${k}) cho máy ${i}`)
         }
       }
       for (let i = k + 1; i < 5; i++) {
         if (device[i] != 0) {
-          console.log(`Máy ${i} gửi thông điệp OK(${i}) cho máy ${k}`)
-          io.emit('notifiCodinator', `Máy ${i} gửi thông điệp OK(${i}) cho máy ${k}`)
+          log.push(`Máy ${i} gửi thông điệp OK(${i}) cho máy ${k}`)
         }
       }
     }
     if (k == 5) {
       k -= 1;
     }
-    console.log(`FINALLY: Máy điều khiển hiện tại: ${k}`);
-    io.emit('notifiCodinator', `FINALLY: Máy điều khiển hiện tại: ${k}`)
+    log.push(`FINALLY: Máy điều khiển hiện tại: ${k}`);
     for (var i = k - 1; i >= 0; i--) {
-      // if (device[i] != 0)
-      // console.log(`Process ${k} passes Coodinator(${k}) messege to process ${i}`);
-      // io.emit('notifiCodinator', `Máy ${k} gửi tín hiệu điều khiển Coodinator(${k}) cho máy ${i}`)
+      if (device[i] != 0) {
+        log.push(`Máy ${k} gửi thông điệp Victory Coodinator(${k}) cho máy ${i}`)
+      }
     }
+    log.forEach((e, i) => {
+      setTimeout(() => {
+        console.log(e);
+        io.emit('notifiCodinator', e)
+      }, i * 1000)
+    });
   });
 });
 const path = require('path');
