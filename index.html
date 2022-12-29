@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="circle">Node 1</div>
+    <div class="log">Log:</div>
+    <script type="module">
+      import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
+      const socket = io('http://192.168.137.1:3000/');
+
+      socket.on('connection', () => {
+        alert('connected');
+      });
+      socket.on('assignID', (ID) => {
+        document.querySelector('.circle').innerText = 'Máy ' + ID;
+        document.title = ID;
+        thisID = ID;
+      });
+      let i = 1;
+      socket.on('notifiCodinator', (log) => {
+        if (disconnectID.indexOf(thisID) >= 0) return;
+        setTimeout(() => {
+          let prefix = 'GỬI: ';
+          if (!log.includes(thisID + ' gửi')) prefix = 'NHẬN: ';
+          if (log.includes('START') || log.includes('FINALLY')) prefix = '';
+          if (
+            log.includes(thisID) ||
+            log.includes('START') ||
+            log.includes('FINALLY')
+          )
+            document.querySelector(
+              '.log'
+            ).innerHTML += `<p>${prefix}${log}</p>`;
+        }, i++ * 6000);
+      });
+      var thisID; //0,1,2,3,4
+      var disconnectID = [4];
+      var startVoteID = 0;
+      setTimeout(() => {
+        if (disconnectID.indexOf(thisID) >= 0) {
+          //start vote
+          socket.emit('disconnected');
+          document.querySelector('.circle').innerText =
+            thisID + ' - DISCONNECTED';
+          document.querySelector('.circle').style.backgroundColor =
+            'rgb(241, 91, 91)   ';
+          document.title += '-disconnected';
+        }
+        setTimeout(() => {
+          if (thisID == startVoteID) {
+            //start vote
+            socket.emit('startVote');
+          }
+        }, '4000');
+      }, '4000');
+    </script>
+  </body>
+</html>

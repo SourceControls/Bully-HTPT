@@ -21,21 +21,14 @@ io.on('connection', (socket) => {
   device[ID] = 1;
   socket.ID = ID;
   console.log('a user connected: ' + socket.ID);
-  // socket.on('disconnected', () => {
-  //   console.log('a user disconnect: ' + socket.ID);
-  //   device[socket.ID] = 0;
-  //   // io.emit('disconnected', socket.ID); //thong bao cho tat ca cac may la co device  disconnect.
-  // });
-  socket.on('disconnect', () => {
+  socket.on('disconnected', () => {
     console.log('a user disconnect: ' + socket.ID);
     device[socket.ID] = 0;
-    // io.emit('disconnected', socket.ID); //thong bao cho tat ca cac may la co device  disconnect.
   });
   socket.emit('assignID', socket.ID); //gui cho may moi ket noi ID cua no
-  socket.broadcast.emit('newConnection', socket.ID); //thong bao cho tat ca cac may la co device moi.
   socket.on('startVote', () => {
-    console.log("startVote: " + socket.ID);
-    console.log(device);
+    io.emit('notifiCodinator', `START: Máy ${socket.ID} thấy rằng cần Vote lại`)
+    console.log(`START: Máy ${socket.ID} thấy rằng cần Vote lại`);
     let k = 0;
     for (k = socket.ID; k < 5; k++) {
       //neu cac may lon hon deu bi tat
@@ -49,24 +42,26 @@ io.on('connection', (socket) => {
 
       for (let i = k + 1; i < 5; i++) {
         if (device[i] != 0) {
-          // socket.emit("notifi", `Process `)
-          console.log(`Process ${k} passes Election(${k}) message to process ${i}`)
+          console.log(`Máy ${k} gửi thông điệp Election(${k}) cho máy ${i}`)
+          io.emit('notifiCodinator', `Máy ${k} gửi thông điệp Election(${k}) cho máy ${i}`)
         }
       }
       for (let i = k + 1; i < 5; i++) {
         if (device[i] != 0) {
-          // console.log("notifi", `Process `)
-          console.log(`Process ${i} passes OK(${i}) message to process ${k}`)
+          console.log(`Máy ${i} gửi thông điệp OK(${i}) cho máy ${k}`)
+          io.emit('notifiCodinator', `Máy ${i} gửi thông điệp OK(${i}) cho máy ${k}`)
         }
       }
     }
     if (k == 5) {
       k -= 1;
     }
-    console.log(`Finally process ${k} becomes Coodinator`);
+    console.log(`FINALLY: Máy điều khiển hiện tại: ${k}`);
+    io.emit('notifiCodinator', `FINALLY: Máy điều khiển hiện tại: ${k}`)
     for (var i = k - 1; i >= 0; i--) {
-      if (device[i] != 0)
-        console.log(`Process ${k} passes Coodinator(${k}) messege to process ${i}`);
+      // if (device[i] != 0)
+      // console.log(`Process ${k} passes Coodinator(${k}) messege to process ${i}`);
+      // io.emit('notifiCodinator', `Máy ${k} gửi tín hiệu điều khiển Coodinator(${k}) cho máy ${i}`)
     }
   });
 });
@@ -80,10 +75,7 @@ app.use(cors({
   origin: '*',
 }));
 
-app.get('/', function (req, res) {
 
-  res.sendFile('./index.html');
-})
 
 // listend on port 3000
 server.listen(3000, () => {
