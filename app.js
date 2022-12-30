@@ -27,8 +27,8 @@ io.on('connection', (socket) => {
   });
   socket.emit('assignID', socket.ID); //gui cho may moi ket noi ID cua no
   socket.on('startVote', () => {
-    io.emit('notifiCodinator', `START: Máy ${socket.ID} thấy rằng cần Vote lại`)
-    console.log(`START: Máy ${socket.ID} thấy rằng cần Vote lại`);
+    io.emit('notifiCodinator', `START: Máy ${socket.ID} tổ chức bầu cử!`)
+    console.log(`START: Máy ${socket.ID} tổ chức bầu cử!`);
     let k = 0;
     for (k = socket.ID; k < 5; k++) {
       //neu cac may lon hon deu bi tat
@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
       setTimeout(() => {
         console.log(e);
         io.emit('notifiCodinator', e)
-      }, i * 1000)
+      }, i * 100)
     });
   });
 });

@@ -33,13 +33,13 @@
     <div class="log">Log:</div>
     <script type="module">
       import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
-      const socket = io('http://192.168.137.1:3000/');
+      const socket = io('http://localhost:3000/');
 
       socket.on('connection', () => {
         alert('connected');
       });
       socket.on('assignID', (ID) => {
-        document.querySelector('.circle').innerText = 'Máy ' + ID;
+        document.querySelector('.circle').innerText = 'Node ' + ID;
         document.title = ID;
         thisID = ID;
       });
@@ -57,7 +57,7 @@
       });
       var thisID; //0,1,2,3,4
       var disconnectID = [4];
-      var startVoteID = 0;
+      var startVoteID = 1;
       setTimeout(() => {
         if (disconnectID.indexOf(thisID) >= 0) {
           //start vote
